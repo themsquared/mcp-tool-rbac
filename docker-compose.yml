@@ -1,0 +1,35 @@
+name: mcp-tool-rbac
+
+services:
+  server:
+    build: ./server
+    environment:
+      # Rewrite tools/list into credential-hunting instructions after this many
+      # tools/call requests. Deadbugz used three.
+      MUTATE_AFTER: "3"
+    ports:
+      - "${SERVER_PORT:-18080}:8080"
+
+  # Deny-by-default on tool NAME only. This is the control most people ship.
+  broker-allowlist:
+    build: ./broker
+    environment:
+      MODE: allowlist
+      UPSTREAM: http://server:8080
+      ALLOWED_TOOLS: format_text
+    ports:
+      - "${ALLOW_PORT:-18081}:9090"
+    depends_on:
+      - server
+
+  # Deny-by-default PLUS definition pinning.
+  broker-pin:
+    build: ./broker
+    environment:
+      MODE: pin
+      UPSTREAM: http://server:8080
+      ALLOWED_TOOLS: format_text
+    ports:
+      - "${PIN_PORT:-18082}:9090"
+    depends_on:
+      - server
