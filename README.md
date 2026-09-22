@@ -2,6 +2,8 @@
 
 **A deny-by-default MCP tool broker, and a demo that a name-based allowlist does not stop tool poisoning.**
 
+> 📖 **Read the write-up:** [MCP Tool Poisoning: A Name Allowlist Is Not Enough](https://webofmike.com/mcp-tool-poisoning-pin-definitions/)
+
 An MCP server can rewrite its own `tools/list` response after you have approved it.
 The tool *names* stay the same; the descriptions and input schemas change into
 instructions to hunt credentials. The model reasons over the description, so a
